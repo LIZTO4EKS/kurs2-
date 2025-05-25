@@ -1,0 +1,12 @@
+{% extends "notes/base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<h2 class="text-xl font-bold mb-4">🔐 Войти в аккаунт</h2>
+<form method="post" class="bg-white p-4 rounded shadow-md max-w-md mx-auto">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+        Войти
+    </button>
+</form>
+{% endblock %}

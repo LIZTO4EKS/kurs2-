@@ -1,0 +1,41 @@
+<!-- Список заметок и форма добавления -->
+
+{% extends "notes/base.html" %}
+{% block title %}Мои заметки{% endblock %}
+{% block content %}
+
+<!-- Форма добавления -->
+<form method="post" class="mb-6 bg-white p-4 rounded shadow-md">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+        ➕ Добавить
+    </button>
+</form>
+
+<!-- Список заметок -->
+<h2 class="text-xl font-semibold mb-3">📅 Список заметок</h2>
+<ul>
+    {% for note in notes %}
+    <li class="bg-white p-4 rounded shadow mb-2 flex justify-between items-center">
+        <div>
+            <h3 class="text-lg font-bold">{{ note.title }}</h3>
+            <p class="text-sm text-gray-600">{{ note.content }}</p>
+            {% if note.due_date %}
+            <p class="text-xs text-gray-500">До: {{ note.due_date }}</p>
+            {% endif %}
+        </div>
+        <div>
+            {% if note.is_done %}
+                <span class="text-green-600 font-bold">✔ Выполнено</span>
+            {% else %}
+                <a href="{% url 'note_toggle_done' note.pk %}" class="text-blue-500 hover:underline">✅ Отметить</a>
+            {% endif %}
+        </div>
+    </li>
+    {% empty %}
+    <li class="text-gray-600">Пока нет заметок.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
