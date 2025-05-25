@@ -25,12 +25,15 @@
             <p class="text-xs text-gray-500">До: {{ note.due_date }}</p>
             {% endif %}
         </div>
-        <div>
+        <div class="flex gap-2">
             {% if note.is_done %}
                 <span class="text-green-600 font-bold">✔ Выполнено</span>
             {% else %}
                 <a href="{% url 'note_toggle_done' note.pk %}" class="text-blue-500 hover:underline">✅ Отметить</a>
             {% endif %}
+
+            <!-- Кнопка для удаления (переноса в корзину) -->
+            <a href="{% url 'note_delete' note.pk %}" class="text-red-500 hover:underline">🗑️ Удалить</a>
         </div>
     </li>
     {% empty %}
