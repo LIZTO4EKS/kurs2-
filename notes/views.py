@@ -3,11 +3,25 @@ from .models import Note
 from .forms import NoteForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.db.models import Q
 
 
 @login_required
 def note_list(request):
-    notes = Note.objects.filter(user=request.user, is_deleted=False).order_by('due_date')
+    query = request.GET.get('q', '')  # Получаем запрос из строки поиска (или пустую строку по умолчанию)
+    
+    # Основной фильтр по user и is_deleted
+    notes = Note.objects.filter(user=request.user, is_deleted=False)
+    
+    # Если есть поисковый запрос, фильтруем по заголовку и содержимому
+    if query:
+        notes = notes.filter(
+            Q(title__icontains=query) | Q(content__icontains=query)
+        )
+    
+    # Сортировка по дате (оставляем как было)
+    notes = notes.order_by('due_date')
+    
     if request.method == 'POST':
         form = NoteForm(request.POST)
         if form.is_valid():
@@ -17,7 +31,9 @@ def note_list(request):
             return redirect('note_list')
     else:
         form = NoteForm()
-    return render(request, 'notes/note_list.html', {'notes': notes, 'form': form})
+    
+    return render(request, 'notes/note_list.html', {'notes': notes, 'form': form, 'query': query})
+
 
 
 @login_required
