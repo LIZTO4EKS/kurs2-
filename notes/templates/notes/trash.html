@@ -15,7 +15,7 @@
           {% if note.due_date %}<small>До: {{ note.due_date }}</small>{% endif %}
         </div>
         <div>
-          <a href="{% url 'restore_note' note.id %}" class="text-green-600 hover:underline mr-4">Восстановить</a>
+          <a href="{% url 'restore_note' note.pk %}" class="text-blue-500 hover:underline">♻️ Восстановить</a>
           <a href="{% url 'permanently_delete_note' note.id %}" class="text-red-600 hover:underline">Удалить навсегда</a>
         </div>
       </li>

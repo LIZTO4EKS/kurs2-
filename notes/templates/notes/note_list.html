@@ -19,6 +19,26 @@
     </button>
 </form>
 
+<!-- Блок для уведомлений -->
+{% if messages %}
+  <ul class="mb-4">
+    {% for message in messages %}
+      <li class="
+        {% if message.tags == 'success' %}
+          bg-green-100 border-l-4 border-green-500 text-green-700
+        {% elif message.tags == 'error' %}
+          bg-red-100 border-l-4 border-red-500 text-red-700
+        {% else %}
+          bg-gray-100 border-l-4 border-gray-500 text-gray-700
+        {% endif %}
+        p-2 rounded mb-2
+      ">
+        {{ message }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
 <!-- Список заметок -->
 <h2 class="text-xl font-semibold mb-3">📅 Список заметок</h2>
 <ul>

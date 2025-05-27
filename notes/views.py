@@ -4,7 +4,7 @@ from .forms import NoteForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.db.models import Q
-
+from django.contrib import messages  # Добавь в начало файла, если ещё не импортировал
 
 @login_required
 def note_list(request):
@@ -19,7 +19,7 @@ def note_list(request):
             Q(title__icontains=query) | Q(content__icontains=query)
         )
     
-    # Сортировка по дате (оставляем как было)
+    # Сортировка по дате
     notes = notes.order_by('due_date')
     
     if request.method == 'POST':
@@ -28,11 +28,15 @@ def note_list(request):
             note = form.save(commit=False)
             note.user = request.user
             note.save()
+            messages.success(request, '✅ Заметка успешно добавлена!')  # Добавляем уведомление
             return redirect('note_list')
+        else:
+            messages.error(request, '❌ Не удалось добавить заметку. Проверьте правильность данных.')
     else:
         form = NoteForm()
     
     return render(request, 'notes/note_list.html', {'notes': notes, 'form': form, 'query': query})
+
 
 
 
@@ -45,10 +49,11 @@ def note_toggle_done(request, pk):
 
 
 @login_required
-def note_delete(request, pk):  # <--- Функция для удаления в корзину
+def note_delete(request, pk):
     note = get_object_or_404(Note, pk=pk, user=request.user)
     note.is_deleted = True
     note.save()
+    messages.success(request, f"Заметка '{note.title}' перенесена в корзину.")
     return redirect('note_list')
 
 
@@ -63,6 +68,7 @@ def restore_note(request, pk):  # Восстановить из корзины
     note = get_object_or_404(Note, pk=pk, user=request.user)
     note.is_deleted = False
     note.save()
+    messages.success(request, f"Заметка '{note.title}' восстановлена из корзины.")
     return redirect('trash')
 
 
