@@ -1,15 +1,17 @@
 {% extends "notes/base.html" %}
 {% block title %}Регистрация{% endblock %}
 {% block content %}
-<h2 class="text-xl font-bold mb-4">📝 Регистрация нового пользователя</h2>
-<form method="post" class="bg-white p-6 rounded shadow-md max-w-md mx-auto">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
-        Зарегистрироваться
-    </button>
-</form>
-<p class="mt-4 text-center">
-    Уже есть аккаунт? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Войти</a>
-</p>
+<div class="max-w-md mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
+    <h2 class="text-2xl font-extrabold text-center text-green-600 mb-6">📝 Регистрация нового пользователя</h2>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+            🚀 Зарегистрироваться
+        </button>
+    </form>
+    <p class="text-center text-sm text-gray-500 mt-4">
+        Уже есть аккаунт? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Войти</a>
+    </p>
+</div>
 {% endblock %}

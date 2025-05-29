@@ -1,44 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gray-100">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Планер{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}PlanIt{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @keyframes slide-in {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .animate-slide-in {
-        animation: slide-in 0.3s ease-out;
-      }
-    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        success: '#10b981',
+                        warning: '#f97316',
+                        danger: '#ef4444',
+                        dark: '#111827',
+                        light: '#f8f9fa',
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<body class="font-sans text-dark bg-light">
 
     <!-- Навигация -->
-    <nav class="bg-white shadow mb-6">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="{% url 'note_list' %}" class="text-xl font-bold text-blue-600">📝 PlanIt</a>
-
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="{% url 'note_list' %}" class="text-2xl font-bold text-primary hover:scale-105 transition">
+                📝 PlanIt
+            </a>
             <div class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'note_list' %}" class="text-blue-500 hover:underline">Мои заметки</a>
-                    <a href="{% url 'trash' %}" class="text-blue-500 hover:underline">Корзина</a>
-
-                    <span class="text-gray-700">Привет, {{ user.username }}!</span>
-
+                    <a href="{% url 'note_list' %}" class="text-dark hover:text-primary font-semibold transition">Мои заметки</a>
+                    <a href="{% url 'trash' %}" class="text-dark hover:text-primary font-semibold transition">Корзина</a>
+                    <span class="text-gray-600">👋 {{ user.username }}</span>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
-                            Выйти
+                        <button type="submit" class="bg-danger hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md transition">
+                            🚪 Выйти
                         </button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    <a href="{% url 'login' %}" class="bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition">
                         Войти
                     </a>
-                    <a href="{% url 'signup' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                    <a href="{% url 'signup' %}" class="bg-success hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition">
                         Регистрация
                     </a>
                 {% endif %}
@@ -46,30 +57,48 @@
         </div>
     </nav>
 
-    <!-- Основной контент -->
-    <div class="container mx-auto p-4">
-
-        <!-- 🔔 Всплывающие уведомления Toast -->
+    <!-- Сообщения -->
+    <div class="fixed top-4 right-4 z-50 space-y-2">
         {% if messages %}
-          <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2">
             {% for message in messages %}
-              <div class="toast-message bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between animate-slide-in">
-                <span>{{ message }}</span>
-                <button onclick="this.parentElement.remove();" class="ml-4 text-white font-bold text-xl leading-none">&times;</button>
-              </div>
+                <div class="bg-success text-white px-4 py-2 rounded-xl shadow-lg flex items-center justify-between animate-fade-in">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" class="ml-4 text-white hover:text-gray-200 text-xl font-bold">&times;</button>
+                </div>
             {% endfor %}
-          </div>
         {% endif %}
-
-        {% block content %}{% endblock %}
     </div>
 
-    <script>
-      // Автоматическое скрытие уведомлений через 5 секунд
-      setTimeout(() => {
-        document.querySelectorAll('.toast-message').forEach(el => el.remove());
-      }, 5000);
-    </script>
+    <!-- Контент -->
+    <main class="max-w-4xl mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
 
+    <!-- Анимации -->
+    <style>
+      @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+          animation: fade-in 0.3s ease-in-out forwards;
+      }
+      .fade-out {
+          opacity: 0 !important;
+          transition: opacity 0.7s ease-in-out;
+      }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const messages = document.querySelectorAll('.fixed.top-4.right-4 > div');
+          messages.forEach(msg => {
+              setTimeout(() => {
+                  msg.classList.add('fade-out');
+                  setTimeout(() => msg.remove(), 700);
+              }, 4000);
+          });
+      });
+    </script>
 </body>
 </html>

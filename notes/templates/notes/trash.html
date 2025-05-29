@@ -3,26 +3,35 @@
 {% block title %}Корзина{% endblock %}
 
 {% block content %}
-<h1 class="text-xl font-bold mb-4">Корзина (удалённые заметки)</h1>
+<h1 class="text-2xl font-bold mb-6 text-gray-800">🗑️ Корзина (удалённые заметки)</h1>
 
 {% if deleted_notes %}
-  <ul>
+  <ul class="space-y-4">
     {% for note in deleted_notes %}
-      <li class="mb-3 p-3 bg-white rounded shadow flex justify-between items-center">
-        <div>
-          <h3 class="font-semibold">{{ note.title }}</h3>
-          <p>{{ note.content }}</p>
-          {% if note.due_date %}<small>До: {{ note.due_date }}</small>{% endif %}
-        </div>
-        <div>
-          <a href="{% url 'restore_note' note.pk %}" class="text-blue-500 hover:underline">♻️ Восстановить</a>
-          <a href="{% url 'permanently_delete_note' note.id %}" class="text-red-600 hover:underline">Удалить навсегда</a>
+      <li class="p-4 bg-white rounded-2xl shadow-md border-l-4 border-gray-300 hover:border-blue-400 transition-all duration-300">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800">{{ note.title }}</h3>
+            <p class="text-sm text-gray-600">{{ note.content }}</p>
+            {% if note.due_date %}
+              <p class="text-xs text-gray-500 mt-1">🗓️ До: {{ note.due_date }}</p>
+            {% endif %}
+          </div>
+
+          <div class="flex items-center gap-2">
+            <a href="{% url 'restore_note' note.pk %}" class="flex items-center bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-full shadow transition duration-200">
+              ♻️ Восстановить
+            </a>
+            <a href="{% url 'permanently_delete_note' note.id %}" class="flex items-center bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded-full shadow transition duration-200">
+              ❌ Удалить навсегда
+            </a>
+          </div>
         </div>
       </li>
     {% endfor %}
   </ul>
 {% else %}
-  <p>Корзина пуста.</p>
+  <p class="text-gray-500 text-center text-lg mt-10">🚫 Корзина пуста</p>
 {% endif %}
 
 {% endblock %}
