@@ -60,6 +60,10 @@
                                 ✅ Отметить
                             </a>
                         {% endif %}
+                        <a href="{% url 'note_edit' note.pk %}" class="text-yellow-600 hover:text-yellow-800 text-sm flex items-center gap-1">
+                            ✏️ Редактировать
+                        </a>
+                        
                         <a href="{% url 'note_delete' note.pk %}" class="text-red-600 hover:text-red-800 text-sm flex items-center gap-1">
                             🗑️ Удалить
                         </a>

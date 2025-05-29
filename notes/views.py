@@ -38,6 +38,21 @@ def note_list(request):
     return render(request, 'notes/note_list.html', {'notes': notes, 'form': form, 'query': query})
 
 
+def note_edit(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    
+    if request.method == 'POST':
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect('note_list')
+    else:
+        form = NoteForm(instance=note)
+
+    return render(request, 'notes/note_edit.html', {'form': form, 'note': note})
+
+
+
 
 
 @login_required

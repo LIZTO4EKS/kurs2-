@@ -1,0 +1,19 @@
+{% extends "notes/base.html" %}
+{% block title %}Редактировать заметку{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md border border-gray-200 mt-6">
+    <h2 class="text-2xl font-semibold mb-4">✏️ Редактировать заметку</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="space-y-4">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
+            💾 Сохранить
+        </button>
+        <a href="{% url 'note_list' %}" class="inline-block mt-4 ml-4 text-blue-600 hover:text-blue-800 transition">Назад</a>
+    </form>
+</div>
+
+{% endblock %}
