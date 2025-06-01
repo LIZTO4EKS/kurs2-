@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-100">
+{% load static %}
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +26,7 @@
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <style>
       @keyframes fade-in {
@@ -41,10 +43,10 @@
       .animate-fade-out {
         animation: fade-out 0.3s ease-in-out forwards;
       }
-    </style>
+    </style>    
     
 </head>
-<body class="font-sans text-dark bg-light">
+<body class="font-sans">
 
     <!-- Навигация -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
@@ -54,8 +56,16 @@
             </a>
             <div class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
+
+                    <button id="theme-toggle" class="py-1 px-3 bg-gray-200 rounded-lg shadow hover:scale-105 transition">
+                        🌓 Переключить тему
+                    </button>
+
                     <a href="{% url 'note_list' %}" class="text-dark hover:text-primary font-semibold transition">Мои заметки</a>
                     <a href="{% url 'trash' %}" class="text-dark hover:text-primary font-semibold transition">Корзина</a>
+
+                   
+
                     <span class="text-gray-600">👋 {{ user.username }}</span>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
@@ -95,18 +105,30 @@
   
   <!-- скрипт для Push уведомления -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const messages = document.querySelectorAll('.fixed.top-4.right-4 > div');
-      messages.forEach(msg => {
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", theme);
+  
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        let current = document.documentElement.getAttribute("data-theme") || "light";
+        let newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+  
+      // Автоматическое удаление уведомлений
+      const messages = document.querySelectorAll('.animate-fade-in');
+      messages.forEach((message) => {
         setTimeout(() => {
-          msg.classList.add('animate-fade-out');
-          msg.addEventListener('animationend', () => {
-            msg.remove();
-          });
-        }, 3000); // через 3 секунды начнётся исчезание
+          message.classList.add('animate-fade-out');
+          setTimeout(() => message.remove(), 300); // Убираем элемент после анимации
+        }, 3000); // Через 3 секунды начнется исчезновение
       });
     });
   </script>
+  
+  
+  
   
 </body>
 </html>

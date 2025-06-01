@@ -2,18 +2,35 @@
 {% block title %}Редактировать заметку{% endblock %}
 {% block content %}
 
-<div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md border border-gray-200 mt-6">
-    <h2 class="text-2xl font-semibold mb-4">✏️ Редактировать заметку</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="space-y-4">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md border border-gray-200 mt-8 space-y-6">
+    
+    <!-- Заголовок страницы -->
+    <h2 class="text-3xl font-bold text-primary flex items-center space-x-2">
+        ✏️ <span>Редактировать заметку</span>
+    </h2>
+
+    <!-- Блок редактирования заметки -->
+    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 shadow-inner space-y-4">
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
             {{ form.as_p }}
-        </div>
-        <button type="submit" class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg shadow transition-transform transform hover:scale-105">
-            💾 Сохранить
-        </button>
-        <a href="{% url 'note_list' %}" class="inline-block mt-4 ml-4 text-blue-600 hover:text-blue-800 transition">Назад</a>
-    </form>
+
+            <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-300">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg shadow transition-transform hover:scale-105">
+                    💾 Сохранить изменения
+                </button>
+                <a href="{% url 'note_list' %}" class="text-primary hover:underline transition">
+                    ⬅️ Вернуться к заметкам
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Подсказка -->
+    <div class="text-sm text-gray-500">
+        Не забудьте сохранить изменения, чтобы они отобразились на главной странице!
+    </div>
+
 </div>
 
 {% endblock %}
